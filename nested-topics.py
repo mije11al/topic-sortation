@@ -20,16 +20,14 @@ import re
 #Replace this with your own location for topic-sortation
 path=r'C:/Users/micha/topic-sortation/'
 
-
-#=======================================================================================================================
-
-
+#Reads in nested datafile
 df = pd.read_excel\
     (path+'keys_for_nested_topics/nested.xlsx',
      sheetname='Sheet1', header=0,encoding='utf-8')
 
 topics = {}
 
+#creates empted dictionary with correct structure
 for index, row in df.iterrows():
     #print row["niveau 1"], row["niveau 2"], row["niveau 3"]
     if row["niveau 1"] not in topics:
@@ -40,7 +38,7 @@ for index, row in df.iterrows():
         topics[row["niveau 1"]][row["niveau 2"]][row["niveau 3"]]={}
 
 print pprint(topics)
-#=======================================================================================================================
+
 
 all_files = glob.glob(os.path.join(path, 'out/*.xlsx'))
 
@@ -52,8 +50,7 @@ for f in all_files:
 
 print data.columns
 
-#=======================================================================================================================
-
+#Sorts data into nested structure
 for column in data.columns:
     for k, v in topics.items():
         for k1, v1, in v.items():
@@ -63,6 +60,6 @@ for column in data.columns:
                 # else:
                 #     v1[k2]=''
 
-
+#Outputs topics into json file
 with open("topics.json","w") as f:
     json.dump(topics,f)
